@@ -1,0 +1,37 @@
+# Unity (project nằm trong unity_kit_upm/)
+unity_kit_upm/[Ll]ibrary/
+unity_kit_upm/[Tt]emp/
+unity_kit_upm/[Oo]bj/
+unity_kit_upm/[Bb]uild/
+unity_kit_upm/[Bb]uilds/
+unity_kit_upm/[Ll]ogs/
+unity_kit_upm/[Uu]ser[Ss]ettings/
+unity_kit_upm/[Mm]emoryCaptures/
+unity_kit_upm/[Rr]ecordings/
+
+# IDE / generated
+.idea/
+.vs/
+.vscode/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Build output
+*.apk
+*.aab
+*.unitypackage
+crashlytics-build.properties
+
+# OS
+.DS_Store
+Thumbs.db

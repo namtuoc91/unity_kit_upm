@@ -1,0 +1,23 @@
+{
+    "name": "Raccoon.GameService",
+    "rootNamespace": "Raccoon.GameService",
+    "references": [
+        "Google.Play.Review",
+        "Google.Play.Common"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.google.play.review",
+            "expression": "",
+            "define": "USING_INAPPREVIEW"
+        }
+    ],
+    "noEngineReferences": false
+}
