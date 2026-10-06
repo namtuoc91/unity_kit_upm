@@ -1,0 +1,26 @@
+{
+    "name": "Raccoon.Purchase",
+    "rootNamespace": "Raccoon.Purchase",
+    "references": [
+        "Raccoon.GameService",
+        "UnityEngine.UI",
+        "Unity.TextMeshPro",
+        "UnityEngine.Purchasing",
+        "UnityEngine.Purchasing.Stores"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.purchasing",
+            "expression": "",
+            "define": "USING_PURCHASE"
+        }
+    ],
+    "noEngineReferences": false
+}
