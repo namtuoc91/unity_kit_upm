@@ -9,7 +9,7 @@ Source nằm ở `unity_kit_upm/Assets/RaccoonKit/`; GitHub Action tách nó ra 
 Package Manager → `+` → **Add package from git URL...**:
 
 ```
-https://github.com/namtuoc91/unity_kit_upm.git#v0.0.1
+https://github.com/namtuoc91/unity_kit_upm.git#v0.0.2
 ```
 
 Hoặc bản mới nhất: `https://github.com/namtuoc91/unity_kit_upm.git#upm`
@@ -19,7 +19,7 @@ Hoặc thêm thẳng vào `Packages/manifest.json`:
 ```json
 {
   "dependencies": {
-    "com.raccoon.game-kit": "https://github.com/namtuoc91/unity_kit_upm.git#v0.0.1"
+    "com.raccoon.game-kit": "https://github.com/namtuoc91/unity_kit_upm.git#v0.0.2"
   }
 }
 ```
@@ -29,7 +29,7 @@ Hoặc thêm thẳng vào `Packages/manifest.json`:
 | Module | Assembly | Phụ thuộc thêm | Define |
 |---|---|---|---|
 | Audio | `Raccoon.Audio` (+ `.Editor`) | — | — |
-| GameService | `Raccoon.GameService` | Firebase SDK, Google Play Review (tùy chọn) | `USING_FIREBASE` (tự thêm), `USING_INAPPREVIEW` (tự bật khi có `com.google.play.review`) |
+| GameService | `Raccoon.GameService` | Firebase SDK, Google Play Review (tùy chọn) | `USING_FIREBASE` (tự thêm), `USING_REMOTECONFIG` (tự bật khi có `com.google.firebase.remote-config`), `USING_INAPPREVIEW` (tự bật khi có `com.google.play.review`) |
 | Haptic | `Raccoon.Haptic` | — | `USING_HAPTIC` (tự thêm) |
 | Helpers | `Raccoon.Helpers` | TextMeshPro | — |
 | Localization | `Raccoon.Localization` (+ `.Editor`) | TextMeshPro (tùy chọn) | `USING_TMP` (tự bật theo `com.unity.ugui` 2.0+) |
@@ -81,7 +81,7 @@ Menu Editor **Raccoon → Localization**:
 - **Add LocalizedFont to Scene**.
 
 ### GameService
-**Firebase** (cần import Firebase Analytics, Crashlytics, Remote Config + define `USING_FIREBASE`): thêm `GameFirebase` vào scene.
+**Firebase** (cần import Firebase Analytics, Crashlytics + define `USING_FIREBASE`; Remote Config cần thêm package `com.google.firebase.remote-config`, không có thì `Get*` trả giá trị mặc định và `WhenRemoteConfigReady` gọi ngay): thêm `GameFirebase` vào scene.
 
 ```csharp
 GameFirebase.SetRemoteConfigDefaults(new Dictionary<string, object> { { "ads_interval", 30 } });

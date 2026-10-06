@@ -1,3 +1,8 @@
+// Remote Config needs both the Firebase core and the Remote Config package.
+#if USING_FIREBASE && USING_REMOTECONFIG
+#define RACCOON_REMOTE_CONFIG
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,12 +20,12 @@ namespace Raccoon.GameService
         #region Remote Config (shared API)
 
         /// Fired once on the main thread when remote config is usable (fetched, or fell back to cache/defaults).
-        /// Requires a GameFirebase instance in the scene when USING_FIREBASE is on.
-#pragma warning disable CS0067 // never raised when USING_FIREBASE is off
+        /// Requires a GameFirebase instance in the scene when USING_FIREBASE and USING_REMOTECONFIG are on.
+#pragma warning disable CS0067 // never raised when remote config is off
         public static event Action OnRemoteConfigReady;
 #pragma warning restore CS0067
 
-#if USING_FIREBASE
+#if RACCOON_REMOTE_CONFIG
         public static bool IsRemoteConfigReady { get; private set; }
 #else
         public static bool IsRemoteConfigReady => true;
@@ -34,6 +39,25 @@ namespace Raccoon.GameService
             else OnRemoteConfigReady += callback;
         }
 
+        private static void NotifyRemoteConfigReady()
+        {
+#if RACCOON_REMOTE_CONFIG
+            if (IsRemoteConfigReady) return;
+            IsRemoteConfigReady = true;
+
+            var callbacks = OnRemoteConfigReady;
+            OnRemoteConfigReady = null;
+            if (callbacks == null) return;
+
+            // Invoke each listener separately so one failing listener does not block the rest.
+            foreach (Action callback in callbacks.GetInvocationList())
+            {
+                try { callback(); }
+                catch (Exception ex) { Debug.LogException(ex); }
+            }
+#endif
+        }
+
         #endregion
 
         // Static state survives Play Mode when Domain Reload is disabled, so reset it explicitly.
@@ -44,6 +68,8 @@ namespace Raccoon.GameService
 #if USING_FIREBASE
             api = null;
             firebaseInitialized = false;
+#endif
+#if RACCOON_REMOTE_CONFIG
             IsRemoteConfigReady = false;
             pendingRemoteDefaults = null;
 #endif
@@ -124,7 +150,9 @@ namespace Raccoon.GameService
 
             Debug.Log("Initialize Firebase.");
 
+#if RACCOON_REMOTE_CONFIG
             LoadRemoteConfig();
+#endif
 
             // SetConsentData();
         }
@@ -139,6 +167,91 @@ namespace Raccoon.GameService
             Firebase.Analytics.FirebaseAnalytics.SetConsent(consentMap);
         }
 
+        private static void SendEventFirebase(string nameEvent, params string[] parameters)
+        {
+#if UNITY_EDITOR
+            var txt = $"send firebase :{nameEvent}: ";
+            for (int i = 0; i + 1 < parameters.Length; i += 2)
+            {
+                txt += $"{parameters[i]}: {NormalizeParamValue(parameters[i + 1])},";
+            }
+            //Debug.Log(txt);
+#endif
+            if (!firebaseInitialized) return;
+
+            var arr = new List<Firebase.Analytics.Parameter>();
+            if (parameters.Length % 2 != 0) return;
+            for (int i = 0; i < parameters.Length; i += 2)
+            {
+                arr.Add(new Firebase.Analytics.Parameter(parameters[i], NormalizeParamValue(parameters[i + 1])));
+            }
+            Firebase.Analytics.FirebaseAnalytics.LogEvent(nameEvent, arr.ToArray());
+        }
+
+        public static void SendEvent(string nameEvent, params string[] parameters)
+        {
+            try
+            {
+#if UNITY_EDITOR
+                SendEventFirebase(nameEvent, parameters);
+#endif
+
+                if (Instance == null || Instance.appFirebase == null)
+                {
+                    Debug.LogWarning("Firebase not initialized yet. Cannot use feature.");
+                    return;
+                }
+                if (firebaseInitialized)
+                    SendEventFirebase(nameEvent, parameters);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"SendEvent '{nameEvent}' failed: {ex}");
+            }
+        }
+
+        public static void SendEventGame(string content)
+        {
+            SendEvent(Event_Firebase.EVENT_GAME, Event_Firebase.EVENT_GAME, content);
+        }
+
+        // Log a caught exception.
+        public void LogCaughtException(Exception ex)
+        {
+            Crashlytics.LogException(ex);
+        }
+
+        void OnDestroy()
+        {
+            if (api == this) api = null;
+        }
+#else
+        private static void SendEventFirebase(string nameEvent, params string[] parameters)
+        {
+            var txt = $"send firebase :{nameEvent}: ";
+            for (int i = 0; i + 1 < parameters.Length; i += 2)
+            {
+                txt += $"{parameters[i]}: {NormalizeParamValue(parameters[i + 1])},";
+            }
+            //Debug.Log(txt);
+        }
+
+        public static void SendEvent(string nameEvent, params string[] parameters)
+        {
+#if UNITY_EDITOR
+            SendEventFirebase(nameEvent, parameters);
+#endif
+        }
+
+        public static void SendEventGame(string content)
+        {
+            SendEvent(Event_Firebase.EVENT_GAME, Event_Firebase.EVENT_GAME, content);
+        }
+#endif
+
+        #region Remote Config (implementation)
+
+#if RACCOON_REMOTE_CONFIG
         // Release builds cache fetched values to avoid Firebase throttling; debug builds always fetch fresh.
         private static readonly TimeSpan ReleaseFetchCacheExpiration = TimeSpan.FromHours(1);
 
@@ -171,23 +284,6 @@ namespace Raccoon.GameService
                 .ContinueWithOnMainThread(_ => remoteConfig.FetchAsync(cacheExpiration))
                 .Unwrap()
                 .ContinueWithOnMainThread(FetchDataComplete);
-        }
-
-        private static void NotifyRemoteConfigReady()
-        {
-            if (IsRemoteConfigReady) return;
-            IsRemoteConfigReady = true;
-
-            var callbacks = OnRemoteConfigReady;
-            OnRemoteConfigReady = null;
-            if (callbacks == null) return;
-
-            // Invoke each listener separately so one failing listener does not block the rest.
-            foreach (Action callback in callbacks.GetInvocationList())
-            {
-                try { callback(); }
-                catch (Exception ex) { Debug.LogException(ex); }
-            }
         }
 
         void FetchDataComplete(Task fetchTask)
@@ -292,71 +388,9 @@ namespace Raccoon.GameService
                 return defaultValue;
             }
         }
-
-        private static void SendEventFirebase(string nameEvent, params string[] parameters)
-        {
-#if UNITY_EDITOR
-            var txt = $"send firebase :{nameEvent}: ";
-            for (int i = 0; i + 1 < parameters.Length; i += 2)
-            {
-                txt += $"{parameters[i]}: {NormalizeParamValue(parameters[i + 1])},";
-            }
-            //Debug.Log(txt);
-#endif
-            if (!firebaseInitialized) return;
-
-            var arr = new List<Firebase.Analytics.Parameter>();
-            if (parameters.Length % 2 != 0) return;
-            for (int i = 0; i < parameters.Length; i += 2)
-            {
-                arr.Add(new Firebase.Analytics.Parameter(parameters[i], NormalizeParamValue(parameters[i + 1])));
-            }
-            Firebase.Analytics.FirebaseAnalytics.LogEvent(nameEvent, arr.ToArray());
-        }
-
-        public static void SendEvent(string nameEvent, params string[] parameters)
-        {
-            try
-            {
-#if UNITY_EDITOR
-                SendEventFirebase(nameEvent, parameters);
-#endif
-
-                if (Instance == null || Instance.appFirebase == null)
-                {
-                    Debug.LogWarning("Firebase not initialized yet. Cannot use feature.");
-                    return;
-                }
-                if (firebaseInitialized)
-                    SendEventFirebase(nameEvent, parameters);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning($"SendEvent '{nameEvent}' failed: {ex}");
-            }
-        }
-
-        public static void SendEventGame(string content)
-        {
-            SendEvent(Event_Firebase.EVENT_GAME, Event_Firebase.EVENT_GAME, content);
-        }
-
-        // Log a caught exception.
-        public void LogCaughtException(Exception ex)
-        {
-            Crashlytics.LogException(ex);
-        }
-
-        void OnDestroy()
-        {
-            if (api == this) api = null;
-        }
 #else
-        // Firebase disabled: remote config getters always return the provided default.
-        public static void SetRemoteConfigDefaults(IDictionary<string, object> defaults)
-        {
-        }
-
+        // Remote config disabled: getters always return the provided default.
+        public static void SetRemoteConfigDefaults(IDictionary<string, object> defaults) { }
         public static bool GetBool(string key, bool defaultValue = false) => defaultValue;
         public static long GetLong(string key, long defaultValue = 0) => defaultValue;
         public static int GetInt(string key, int defaultValue = 0) => defaultValue;
@@ -364,29 +398,9 @@ namespace Raccoon.GameService
         public static float GetFloat(string key, float defaultValue = 0f) => defaultValue;
         public static string GetString(string key, string defaultValue = "") => defaultValue;
         public static T GetJson<T>(string key, T defaultValue = default) => defaultValue;
-
-        private static void SendEventFirebase(string nameEvent, params string[] parameters)
-        {
-            var txt = $"send firebase :{nameEvent}: ";
-            for (int i = 0; i + 1 < parameters.Length; i += 2)
-            {
-                txt += $"{parameters[i]}: {NormalizeParamValue(parameters[i + 1])},";
-            }
-            //Debug.Log(txt);
-        }
-
-        public static void SendEvent(string nameEvent, params string[] parameters)
-        {
-#if UNITY_EDITOR
-            SendEventFirebase(nameEvent, parameters);
 #endif
-        }
 
-        public static void SendEventGame(string content)
-        {
-            SendEvent(Event_Firebase.EVENT_GAME, Event_Firebase.EVENT_GAME, content);
-        }
-#endif
+        #endregion
     }
 
     public class Event_Firebase
