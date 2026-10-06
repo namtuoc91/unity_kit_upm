@@ -1,6 +1,6 @@
 {
   "name": "com.raccoon.game-kit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "displayName": "Raccoon Game Kit",
   "description": "Raccoon game kit: Audio, GameService (Firebase, In-App Review), Haptic, Helpers, Localization, Purchase.",
   "unity": "6000.0",

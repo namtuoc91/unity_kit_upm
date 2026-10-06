@@ -17,6 +17,11 @@
             "name": "com.google.play.review",
             "expression": "",
             "define": "USING_INAPPREVIEW"
+        },
+        {
+            "name": "com.google.firebase.remote-config",
+            "expression": "",
+            "define": "USING_REMOTECONFIG"
         }
     ],
     "noEngineReferences": false
