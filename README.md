@@ -6,7 +6,7 @@ Repo dev UPM package `com.raccoon.game-kit` (Unity 6). Source package: `unity_ki
 Package Manager → `+` → **Add package from git URL...**
 
 ```
-https://github.com/namtuoc91/unity_kit_upm.git#v0.0.2   # pin version (khuyên dùng)
+https://github.com/namtuoc91/unity_kit_upm.git#v0.0.3   # pin version (khuyên dùng)
 https://github.com/namtuoc91/unity_kit_upm.git#upm      # luôn bản mới nhất
 ```
 

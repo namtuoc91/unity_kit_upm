@@ -2,6 +2,10 @@
 
 Format theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version theo [SemVer](https://semver.org/).
 
+## [0.0.3] - 2026-10-06
+### Added
+- Editor window **Raccoon → GameKit Setup...** (`Raccoon.GameKit.Editor`): bật/tắt Scripting Define Symbols của kit theo build target, kiểm tra SDK đã có chưa, thêm/xoá define tùy ý.
+
 ## [0.0.2] - 2026-10-06
 ### Changed
 - Firebase Remote Config tách riêng: chỉ bật khi có cả `USING_FIREBASE` và `USING_REMOTECONFIG` (tự bật khi cài package `com.google.firebase.remote-config`). Không có Remote Config thì `Get*` trả giá trị mặc định, `IsRemoteConfigReady` luôn `true`.

@@ -9,7 +9,7 @@ Source nằm ở `unity_kit_upm/Assets/RaccoonKit/`; GitHub Action tách nó ra 
 Package Manager → `+` → **Add package from git URL...**:
 
 ```
-https://github.com/namtuoc91/unity_kit_upm.git#v0.0.2
+https://github.com/namtuoc91/unity_kit_upm.git#v0.0.3
 ```
 
 Hoặc bản mới nhất: `https://github.com/namtuoc91/unity_kit_upm.git#upm`
@@ -19,7 +19,7 @@ Hoặc thêm thẳng vào `Packages/manifest.json`:
 ```json
 {
   "dependencies": {
-    "com.raccoon.game-kit": "https://github.com/namtuoc91/unity_kit_upm.git#v0.0.2"
+    "com.raccoon.game-kit": "https://github.com/namtuoc91/unity_kit_upm.git#v0.0.3"
   }
 }
 ```
@@ -36,6 +36,8 @@ Hoặc thêm thẳng vào `Packages/manifest.json`:
 | Purchase | `Raccoon.Purchase` | Unity IAP `com.unity.purchasing` | `USING_PURCHASE` (tự bật khi có package) |
 
 "Tự thêm" = thêm vào **Player Settings → Scripting Define Symbols**. Không có define thì API vẫn compile nhưng không làm gì (hoặc trả về giá trị mặc định).
+
+Bật/tắt define nhanh qua menu **Raccoon → GameKit Setup...**: chọn build target (Android / iOS / Standalone), tick define của kit (cột trạng thái báo SDK đã có hay chưa), thêm/xoá define tùy ý, rồi bấm **Apply**. Nếu SDK cài bằng `.unitypackage` (không phải UPM) thì `versionDefines` không tự bật — dùng window này để thêm define.
 
 ## Sử dụng
 
