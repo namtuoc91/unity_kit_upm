@@ -1,8 +1,8 @@
 {
   "name": "com.raccoon.game-kit",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "displayName": "Raccoon Game Kit",
-  "description": "Raccoon game kit: Audio, GameService (Firebase, In-App Review), Haptic, Helpers, Localization, Purchase.",
+  "description": "Raccoon game kit: Audio, GameService (Firebase, In-App Review), Haptic, Helpers, Localization, Purchase, Save.\n\nOptional dependencies, install them to enable the module (without them the API compiles but does nothing). Toggle defines in Raccoon > GameKit Setup:\n- Save: Newtonsoft JSON (com.unity.nuget.newtonsoft-json) -> USING_GAMESAVE (auto)\n- Purchase: Unity IAP (com.unity.purchasing) -> USING_PURCHASE (auto)\n- GameService: Firebase Analytics + Crashlytics -> USING_FIREBASE (manual), com.google.firebase.remote-config -> USING_REMOTECONFIG (auto), com.google.play.review -> USING_INAPPREVIEW (auto)",
   "unity": "6000.0",
   "dependencies": {
     "com.unity.ugui": "2.0.0"

@@ -41,6 +41,7 @@ namespace Raccoon.GameKit
             new("USING_PURCHASE", "Purchase", "Unity IAP (com.unity.purchasing)", "UnityEngine.Purchasing.UnityPurchasing"),
             new("USING_HAPTIC", "Haptic", "Rung native Android/iOS", null),
             new("USING_TMP", "Localization", "TextMeshPro", "TMPro.TMP_Text"),
+            new("USING_GAMESAVE", "Save", "GameSave (Newtonsoft JSON com.unity.nuget.newtonsoft-json)", "Newtonsoft.Json.JsonConvert"),
         };
 
         private static readonly (NamedBuildTarget target, string label)[] Targets =

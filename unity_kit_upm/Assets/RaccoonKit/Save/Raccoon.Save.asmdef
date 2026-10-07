@@ -1,0 +1,20 @@
+{
+    "name": "Raccoon.Save",
+    "rootNamespace": "Raccoon.Save",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.nuget.newtonsoft-json",
+            "expression": "3.0.0",
+            "define": "USING_GAMESAVE"
+        }
+    ],
+    "noEngineReferences": false
+}
