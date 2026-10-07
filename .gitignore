@@ -8,6 +8,7 @@ unity_kit_upm/[Ll]ogs/
 unity_kit_upm/[Uu]ser[Ss]ettings/
 unity_kit_upm/[Mm]emoryCaptures/
 unity_kit_upm/[Rr]ecordings/
+unity_kit_upm/[Bb]uild[Rr]eports/
 
 # IDE / generated
 .idea/
