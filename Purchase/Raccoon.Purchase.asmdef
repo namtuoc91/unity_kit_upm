@@ -5,8 +5,8 @@
         "Raccoon.GameService",
         "UnityEngine.UI",
         "Unity.TextMeshPro",
-        "UnityEngine.Purchasing",
-        "UnityEngine.Purchasing.Stores"
+        "Unity.Purchasing",
+        "Unity.Purchasing.Stores"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -18,7 +18,7 @@
     "versionDefines": [
         {
             "name": "com.unity.purchasing",
-            "expression": "",
+            "expression": "5.0.0",
             "define": "USING_PURCHASE"
         }
     ],

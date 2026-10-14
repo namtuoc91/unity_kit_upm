@@ -2,6 +2,13 @@
 
 Format theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version theo [SemVer](https://semver.org/).
 
+## [0.0.5] - 2026-10-14
+### Fixed
+- Purchase: lỗi CS0234 `UnityEngine.Purchasing` khi cài Unity IAP v5. IAP v5 đổi tên assembly thành `Unity.Purchasing` / `Unity.Purchasing.Stores`, `Raccoon.Purchase.asmdef` đã tham chiếu theo tên mới.
+
+### Changed
+- `USING_PURCHASE` chỉ tự bật khi `com.unity.purchasing` >= 5.0.0 (code dùng `StoreController` của IAP v5). Với IAP 4.x, module Purchase compile nhưng không làm gì.
+
 ## [0.0.4] - 2026-10-07
 ### Added
 - Module Save (`Raccoon.Save` + `.Editor`): `GameSave` lưu data local dạng JSON (primitive, class, `List`, `Dictionary`, struct Unity) trong `persistentDataPath`. Ghi atomic (`.tmp` → `.bak`), tự khôi phục khi file hỏng, mã hoá AES + HMAC (mặc định bật, Editor ghi plain), versioning + migration, tự save khi pause / mất focus / quit, `ImportFromPlayerPrefs`.
